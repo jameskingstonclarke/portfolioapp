@@ -7,8 +7,11 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -26,21 +29,28 @@ public class MainFeedActivity extends AppCompatActivity {
 
         ConstraintLayout layout = findViewById(R.id.endlessScrollLayout);
         LayoutInflater inflater = getLayoutInflater();
-        TextView view, previousView=null;
-        for(int i = 0; i<19; i++) {
-            view = (TextView)inflater.inflate(R.layout.test, null);
-            view.setTextColor(getResources().getColor(R.color.textColour));
+        RelativeLayout relLayout, previousLayout=null;
+        for(int i = 0; i<25; i++) {
+            relLayout = (RelativeLayout) inflater.inflate(R.layout.post_layout, null);
+            relLayout.setId(View.generateViewId());
+
+            TextView postTitle = relLayout.findViewById(R.id.post_title);
+            TextView description = relLayout.findViewById(R.id.post_description);
+
             Web.RequestTask req = new Web.RequestTask();
-            req.setResultText(view);
-            req.execute("http://51.75.143.168/testapi.php", "", "name");
-            view.setId(View.generateViewId());
-            layout.addView(view,i);
+            req.setResultText(postTitle);
+            req.execute("http://51.75.143.168/appapi/testapi.php", "", "title");
+            req = new Web.RequestTask();
+            req.setResultText(description);
+            req.execute("http://51.75.143.168/appapi/testapi.php", "", "description");
+
+            layout.addView(relLayout, i);
             set.clone(layout);
-            if(previousView!=null)
-                set.connect(view.getId(), ConstraintSet.TOP, previousView.getId(), ConstraintSet.BOTTOM, 60);
+            if (previousLayout != null)
+                set.connect(relLayout.getId(), ConstraintSet.TOP, previousLayout.getId(), ConstraintSet.BOTTOM, 60);
             set.applyTo(layout);
 
-            previousView = view;
+            previousLayout = relLayout;
         }
     }
 
