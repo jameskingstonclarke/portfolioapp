@@ -5,4 +5,7 @@
     <string name="discover_button">discover</string>
     <string name="post_button">post</string>
     <string name="notification_button">notifications</string>
+    <string name="submit_post">submit post</string>
+    <string name="post_submit_title_placeholder">title</string>
+    <string name="post_submit_description_placeholder">description</string>
 </resources>
