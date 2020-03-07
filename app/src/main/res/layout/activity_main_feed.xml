@@ -73,7 +73,7 @@
         app:layout_constraintStart_toEndOf="@+id/button3" />
 
     <ScrollView
-        android:id="@+id/endlessScroll"
+        android:id="@+id/mainProjectPostScroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"
@@ -85,7 +85,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/endlessScrollLayout"
+            android:id="@+id/mainProjectPostScrollConstraint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

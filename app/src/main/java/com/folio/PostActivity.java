@@ -33,7 +33,7 @@ public class PostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_post);
     }
 
-    public void submitPost(View view){
+    public void submitProjectPost(View view){
         System.out.println("Submitting post...");
         String title = ((TextView)findViewById(R.id.post_title_input)).getText().toString();
         String description = ((TextView)findViewById(R.id.post_decription_input)).getText().toString();
@@ -42,13 +42,52 @@ public class PostActivity extends AppCompatActivity {
 
         OkHttpClient client = new OkHttpClient();
 
-        String postSubmitURL = "http://jameskingstonclarke.com/appapi/post_submit.php";
+        String postSubmitURL = "http://jameskingstonclarke.com/appapi/project_post_submit.php";
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("user_id", "0")
                 .addFormDataPart("title", title)
                 .addFormDataPart("description", description)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(postSubmitURL)
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.isSuccessful()){
+                    System.out.println("successful!");
+                }else{
+                    System.out.println("unsuccessful!");
+                }
+            }
+        });
+
+        Intent intent = new Intent(this, MainFeedActivity.class);
+        startActivity(intent);
+    }
+
+    public void submitUserPost(View view){
+        System.out.println("Submitting post...");
+        String summary = ((TextView)findViewById(R.id.user_post_summary)).getText().toString();
+
+        OkHttpClient client = new OkHttpClient();
+
+        String postSubmitURL = "http://jameskingstonclarke.com/appapi/user_post_submit.php";
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("user_id", "0")
+                .addFormDataPart("summary", summary)
                 .build();
 
         Request request = new Request.Builder()

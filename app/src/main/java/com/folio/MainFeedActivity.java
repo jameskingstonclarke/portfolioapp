@@ -9,12 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.folio.project.ProjectPost;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -24,17 +21,14 @@ import okhttp3.Response;
 
 public class MainFeedActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
 
         OkHttpClient client = new OkHttpClient();
-
-        String postGetURL = "http://jameskingstonclarke.com/appapi/post_get.php?function=all";
+        String postGetURL = Urls.PROJECT_POST+"?function=all";
         Request postGetRequest = new Request.Builder().url(postGetURL).build();
-
         client.newCall(postGetRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -47,6 +41,7 @@ public class MainFeedActivity extends AppCompatActivity {
                     String myResponse = response.body().string();
                     final JSONArray jsonArray;
                     JSONArray tempArray = null;
+                    // Attempt to retrieve the post count
                     final int postCount;
                     int tempCount = 0;
                     try {
@@ -57,24 +52,24 @@ public class MainFeedActivity extends AppCompatActivity {
                     }
                     postCount = tempCount;
                     jsonArray = tempArray;
+                    // Update the endless scroll UI
                     MainFeedActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             // Dynamically invoke stuff here
                             ConstraintSet set = new ConstraintSet();
-                            ConstraintLayout layout = findViewById(R.id.endlessScrollLayout);
+                            ConstraintLayout layout = findViewById(R.id.mainProjectPostScrollConstraint);
                             LayoutInflater inflater = getLayoutInflater();
                             RelativeLayout relLayout, previousLayout=null;
 
                             for(int i = 0; i<postCount; i++) {
-
-                                relLayout = (RelativeLayout) inflater.inflate(R.layout.post_layout, null);
+                                relLayout = (RelativeLayout) inflater.inflate(R.layout.project_post_layout, null);
                                 relLayout.setId(View.generateViewId());
-
-                                TextView postTitle = relLayout.findViewById(R.id.post_title);
-                                TextView description = relLayout.findViewById(R.id.post_description);
-                                TextView user = relLayout.findViewById(R.id.post_user);
-                                TextView time = relLayout.findViewById(R.id.post_time);
+                                // Get the text views and update them accordingly
+                                TextView postTitle = relLayout.findViewById(R.id.project_post_title);
+                                TextView description = relLayout.findViewById(R.id.project_post_description);
+                                TextView user = relLayout.findViewById(R.id.project_post_user);
+                                TextView time = relLayout.findViewById(R.id.project_post_time);
                                 try {
                                     JSONObject json = (JSONObject)jsonArray.get(i);
                                     postTitle.setText(json.getString("title"));
@@ -89,7 +84,6 @@ public class MainFeedActivity extends AppCompatActivity {
                                 if (previousLayout != null)
                                     set.connect(relLayout.getId(), ConstraintSet.TOP, previousLayout.getId(), ConstraintSet.BOTTOM, 60);
                                 set.applyTo(layout);
-
                                 previousLayout = relLayout;
                             }
                         }
