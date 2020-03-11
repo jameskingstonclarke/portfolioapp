@@ -75,12 +75,19 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                                 TextView description = relLayout.findViewById(R.id.project_post_description);
                                 TextView user = relLayout.findViewById(R.id.project_post_user);
                                 TextView time = relLayout.findViewById(R.id.project_post_time);
+                                TextView skills = relLayout.findViewById(R.id.project_post_skills);
                                 try {
                                     JSONObject json = (JSONObject)jsonArray.get(i);
                                     postTitle.setText(json.getString("title"));
                                     description.setText(json.getString("description"));
-                                    user.setText(json.getString("user_name"));
+                                    user.setText("by "+json.getString("user_name"));
                                     time.setText(json.getString("time"));
+                                    skills.setText("skills: ");
+                                    JSONArray skillsArray = json.getJSONArray("skills");
+                                    for(int skillIndex = 0; skillIndex<skillsArray.length(); skillIndex++)
+                                        skills.setText(
+                                                skillIndex==0 ? skills.getText()+(String)skillsArray.get(skillIndex) : skills.getText()+", "+skillsArray.get(skillIndex)
+                                        );
                                 }catch(JSONException e){
                                     e.printStackTrace();
                                 }

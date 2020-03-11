@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,18 +38,26 @@ public class PostActivity extends AppCompatActivity {
         System.out.println("Submitting post...");
         String title = ((TextView)findViewById(R.id.post_title_input)).getText().toString();
         String description = ((TextView)findViewById(R.id.post_decription_input)).getText().toString();
+        String skills = ((TextView)findViewById(R.id.project_skills_input)).getText().toString();
+        String[] skillsArray = (String[])Arrays.asList(skills.split("\\s*,\\s*")).toArray();
         System.out.println(title);
         System.out.println(description);
 
         OkHttpClient client = new OkHttpClient();
 
-        String postSubmitURL = "http://jameskingstonclarke.com/appapi/project_post_submit.php";
-
+        String postSubmitURL = Urls.PROJECT_POST;
+        String skillsJson = "[]";
+        try{
+            skillsJson = new JSONArray(skillsArray).toString();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("user_id", "0")
                 .addFormDataPart("title", title)
                 .addFormDataPart("description", description)
+                .addFormDataPart("skills", skillsJson)
                 .build();
 
         Request request = new Request.Builder()
@@ -69,6 +78,7 @@ public class PostActivity extends AppCompatActivity {
                 }else{
                     System.out.println("unsuccessful!");
                 }
+                System.out.println(response.body().string());
             }
         });
 
