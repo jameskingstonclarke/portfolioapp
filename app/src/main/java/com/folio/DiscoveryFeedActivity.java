@@ -19,8 +19,10 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class DiscoveryFeedActivity extends AppCompatActivity {
@@ -31,10 +33,18 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_discovery_feed);
 
         OkHttpClient client = new OkHttpClient();
+        String postGetURL = Urls.PROJECT_POST;
 
-        String postGetURL = Urls.PROJECT_POST+"?function=all";
-        Request postGetRequest = new Request.Builder().url(postGetURL).build();
-        client.newCall(postGetRequest).enqueue(new Callback() {
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("function", "all")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(postGetURL)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -104,9 +114,19 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
             }
         });
 
-        String userGetURL = Urls.USER_POST+"?function=all";
-        postGetRequest = new Request.Builder().url(userGetURL).build();
-        client.newCall(postGetRequest).enqueue(new Callback() {
+        client = new OkHttpClient();
+        postGetURL = Urls.USER_POST;
+
+        requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("function", "all")
+                .build();
+
+        request = new Request.Builder()
+                .url(postGetURL)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -116,6 +136,7 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.isSuccessful()){
                     String myResponse = response.body().string();
+                    System.out.println(myResponse);
                     final JSONArray jsonArray;
                     JSONArray tempArray = null;
                     // Attempt to retrieve the post count

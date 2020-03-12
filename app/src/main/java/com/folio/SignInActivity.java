@@ -50,11 +50,12 @@ public class SignInActivity extends AppCompatActivity {
         final String username;
         String tmpusername = ((TextView)findViewById(R.id.signin_username_input)).getText().toString();
         username = tmpusername;
+        String password = ((TextView)findViewById(R.id.signin_password_input)).getText().toString();
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("grant_type", "password")
                 .addFormDataPart("username", username)
-                .addFormDataPart("password", ((TextView)findViewById(R.id.signin_password_input)).getText().toString())
+                .addFormDataPart("password", password)
                 .build();
         Request request = new Request.Builder()
                 .url(Urls.AUTH_GET_TOKEN)
@@ -73,7 +74,7 @@ public class SignInActivity extends AppCompatActivity {
                 try{
                     JSONObject json = new JSONObject(myResponse);
                     if(response.isSuccessful()){
-                        validLogin(json.getString("access_token"));
+                        validLogin(username, json);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -83,9 +84,14 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     // Perform login stuff here
-    private void validLogin(String accessToken){
+    private void validLogin(final String username, final JSONObject token){
         OkHttpClient client = new OkHttpClient();
-        RequestBody formBody = new FormBody.Builder().add("access_token", accessToken).build();
+        RequestBody formBody = null;
+        try{
+            formBody = new FormBody.Builder().add("access_token", token.getString("access_token")).build();
+        }catch(JSONException e){
+            e.printStackTrace();
+        }
         Request request = new Request.Builder()
                 .url(Urls.AUTH_VALIDATE_LOGIN)
                 .post(formBody)
@@ -102,19 +108,21 @@ public class SignInActivity extends AppCompatActivity {
                 try{
                     JSONObject json = new JSONObject(myResponse);
                     if(response.isSuccessful() && json.getString("success")=="true"){
-                        finishLogin();
+                        finishLogin(username, json);
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
             }
         });
-        User.LOGGED_IN = true;
-        User.user = new User("bob");
     }
 
-    private void finishLogin(){
+    private void finishLogin(String username, JSONObject token){
+        Auth.auth.setToken(token);
         Intent intent = new Intent(this, MainFeedActivity.class);
+
+        User.LOGGED_IN = true;
+        User.user = new User(username);
         startActivity(intent);
     }
 }

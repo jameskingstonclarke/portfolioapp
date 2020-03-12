@@ -15,8 +15,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainFeedActivity extends AppCompatActivity {
@@ -26,9 +28,18 @@ public class MainFeedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_feed);
 
         OkHttpClient client = new OkHttpClient();
-        String postGetURL = Urls.PROJECT_POST+"?function=all";
-        Request postGetRequest = new Request.Builder().url(postGetURL).build();
-        client.newCall(postGetRequest).enqueue(new Callback() {
+        String postGetURL = Urls.PROJECT_POST;
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("function", "all")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(postGetURL)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
@@ -38,6 +49,7 @@ public class MainFeedActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.isSuccessful()){
                     String myResponse = response.body().string();
+                    System.out.println(myResponse);
                     final JSONArray jsonArray;
                     JSONArray tempArray = null;
                     // Attempt to retrieve the post count
