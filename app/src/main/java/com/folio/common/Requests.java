@@ -1,5 +1,7 @@
 package com.folio.common;
 import androidx.arch.core.util.Function;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -18,8 +20,8 @@ public class Requests {
 
 
     public interface RequestOperation{
-        JSONObject onReply(JSONObject reply);
-        JSONObject onFail(JSONObject reply);
+        JSONObject onReply(String reply);
+        JSONObject onFail(String reply);
     }
 
     /**
@@ -68,14 +70,10 @@ public class Requests {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String myResponse = response.body().string();
-                try{
-                    if(response.isSuccessful()){
-                        requestOperation.onReply(new JSONObject(myResponse));
-                    }else{
-                        requestOperation.onFail(new JSONObject(myResponse));
-                    }
-                }catch (JSONException e){
-                    e.printStackTrace();
+                if(response.isSuccessful()){
+                    requestOperation.onReply(myResponse);
+                }else{
+                    requestOperation.onFail(myResponse);
                 }
             }
         });
