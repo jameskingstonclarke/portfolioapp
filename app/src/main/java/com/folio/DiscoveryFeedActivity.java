@@ -41,7 +41,7 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
     public void createProjectPostUI(){
         HashMap<String, String> data = new HashMap<>();
         data.put("function", "all");
-        Requests.postRequestToken(Urls.PROJECT_POST, data,
+        Requests.postRequestToken(false, Urls.PROJECT_POST, data,
                 new Requests.RequestOperation() {
                     @Override
                     public JSONObject onReply(String reply) {
@@ -112,7 +112,7 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
     public void createUserPostUI(){
         HashMap<String, String> data = new HashMap<>();
         data.put("function", "all");
-        Requests.postRequestToken(Urls.USER_POST, data,
+        Requests.postRequestToken(false, Urls.USER_POST, data,
                 new Requests.RequestOperation() {
                     @Override
                     public JSONObject onReply(String reply) {

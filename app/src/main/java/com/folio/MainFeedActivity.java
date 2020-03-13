@@ -9,24 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.folio.common.Auth;
 import com.folio.common.Requests;
-import com.folio.user.User;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.IOException;
 import java.util.HashMap;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class MainFeedActivity extends AppCompatActivity {
 
@@ -41,7 +28,7 @@ public class MainFeedActivity extends AppCompatActivity {
     public void createProjectPostUI(){
         HashMap<String, String> data = new HashMap<>();
         data.put("function", "all");
-        Requests.postRequestToken(Urls.PROJECT_POST, data,
+        Requests.postRequestToken(false, Urls.PROJECT_POST, data,
                 new Requests.RequestOperation() {
                     @Override
                     public JSONObject onReply(String reply) {

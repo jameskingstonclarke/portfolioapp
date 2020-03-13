@@ -27,7 +27,7 @@ public class SignInActivity extends AppCompatActivity {
         data.put("grant_type", "password");
         data.put("username", ((TextView)findViewById(R.id.signin_username_input)).getText().toString());
         data.put("password", ((TextView)findViewById(R.id.signin_password_input)).getText().toString());
-        Requests.postRequestRaw(Urls.AUTH_GET_TOKEN, data,
+        Requests.postRequestRaw(true, Urls.AUTH_GET_TOKEN, data,
                 new Requests.RequestOperation() {
                     @Override
                     public JSONObject onReply(String reply) {
