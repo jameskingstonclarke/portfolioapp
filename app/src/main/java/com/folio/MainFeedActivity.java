@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.folio.common.Requests;
+import com.folio.user.User;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,11 +19,13 @@ import java.util.HashMap;
 
 public class MainFeedActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_feed);
+
+        ((TextView)findViewById(R.id.username)).setText(User.user.getUsername());
+
         createProjectPostUI();
     }
 
@@ -64,7 +68,8 @@ public class MainFeedActivity extends AppCompatActivity {
                                         JSONObject json = (JSONObject)jsonArray.get(i);
                                         postTitle.setText(json.getString("title"));
                                         description.setText(json.getString("description"));
-                                        user.setText("by "+json.getString("user_name"));
+                                        String byUser = json.getString("user_name");
+                                        user.setText("by "+(byUser.equals(User.user.getUsername()) ? "you" : byUser));
                                         time.setText(json.getString("time"));
                                         skills.setText("skills: ");
                                         JSONArray skillsArray = json.getJSONArray("skills");
@@ -89,7 +94,6 @@ public class MainFeedActivity extends AppCompatActivity {
                     }
                     @Override
                     public JSONObject onFail(String reply){
-                        System.out.println(reply);
                         return null;
                     }
                 }

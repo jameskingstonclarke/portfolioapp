@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.folio.common.Requests;
+import com.folio.user.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +35,9 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discovery_feed);
+
+        ((TextView)findViewById(R.id.username)).setText(User.user.getUsername());
+
         createProjectPostUI();
         createUserPostUI();
     }
@@ -77,7 +81,8 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                                         JSONObject json = (JSONObject)jsonArray.get(i);
                                         postTitle.setText(json.getString("title"));
                                         description.setText(json.getString("description"));
-                                        user.setText("by "+json.getString("user_name"));
+                                        String byUser = json.getString("user_name");
+                                        user.setText("by "+(byUser.equals(User.user.getUsername()) ? "you" : byUser));
                                         time.setText(json.getString("time"));
                                         skills.setText("skills: ");
                                         JSONArray skillsArray = json.getJSONArray("skills");
@@ -102,7 +107,6 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                     }
                     @Override
                     public JSONObject onFail(String reply){
-                        System.out.println(reply);
                         return null;
                     }
                 }
@@ -143,7 +147,8 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                                 TextView postSummary = relLayout.findViewById(R.id.user_post_summary);
                                 try {
                                     JSONObject json = (JSONObject)jsonArray.get(i);
-                                    postName.setText(json.getString("name"));
+                                    String byUser = json.getString("username");
+                                    postName.setText((byUser.equals(User.user.getUsername()) ? "you" : byUser));
                                     postSummary.setText(json.getString("summary"));
                                 }catch(JSONException e){
                                     e.printStackTrace();
@@ -161,7 +166,6 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                     }
                     @Override
                     public JSONObject onFail(String reply){
-                        System.out.println(reply);
                         return null;
                     }
                 }

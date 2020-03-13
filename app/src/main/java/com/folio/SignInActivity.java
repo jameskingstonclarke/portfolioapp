@@ -45,7 +45,6 @@ public class SignInActivity extends AppCompatActivity {
                     }
                     @Override
                     public JSONObject onFail(String reply){
-                        System.out.println(reply);
                         return null;
                     }
                 }
