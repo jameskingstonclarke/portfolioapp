@@ -84,6 +84,7 @@ public class PostActivity extends AppCompatActivity {
         Requests.postRequestToken(false, Urls.USER_POST, data, new Requests.RequestOperation() {
             @Override
             public JSONObject onReply(String reply) {
+                System.out.println("um...." + reply);
                 return null;
             }
 

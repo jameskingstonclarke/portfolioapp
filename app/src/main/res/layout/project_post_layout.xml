@@ -42,7 +42,7 @@
         android:fontFamily="sans-serif-light"
         android:singleLine="true"
         android:text="user"
-        android:textAlignment="textEnd"
+        android:textAlignment="center"
         android:textColor="@color/textColour"
         android:textSize="12sp"
         android:textStyle="italic" />
@@ -60,7 +60,7 @@
         android:fontFamily="sans-serif-light"
         android:singleLine="true"
         android:text="time"
-        android:textAlignment="viewStart"
+        android:textAlignment="center"
         android:textColor="@color/textColour"
         android:textSize="12sp"
         android:textStyle="italic" />
@@ -77,10 +77,19 @@
         android:layout_marginEnd="1dp"
         android:fontFamily="sans-serif-light"
         android:singleLine="true"
-        android:text="skills"
+        android:text="skills: "
         android:textAlignment="center"
         android:textColor="@color/textColour"
         android:textSize="18sp"
         android:textStyle="italic" />
+
+    <Button
+        android:id="@+id/project_post_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="98dp"
+        android:text="apply" />
 
 </RelativeLayout>

@@ -12,22 +12,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.folio.common.Requests;
+import com.folio.project.ProjectPost;
 import com.folio.user.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class DiscoveryFeedActivity extends AppCompatActivity {
 
@@ -79,10 +71,18 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                                     TextView skills = relLayout.findViewById(R.id.project_post_skills);
                                     try {
                                         JSONObject json = (JSONObject)jsonArray.get(i);
+                                        final String postID = json.getString("id");
+                                        relLayout.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                toProjectPostDetail(postID);
+                                            }
+                                        });
                                         postTitle.setText(json.getString("title"));
                                         description.setText(json.getString("description"));
                                         String byUser = json.getString("user_name");
-                                        user.setText("by "+(byUser.equals(User.user.getUsername()) ? "you" : byUser));
+                                        boolean byUs = byUser.equals(User.user.getUsername());
+                                        user.setText("by "+(byUs ? "you" : byUser));
                                         time.setText(json.getString("time"));
                                         skills.setText("skills: ");
                                         JSONArray skillsArray = json.getJSONArray("skills");
@@ -90,6 +90,17 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                                             skills.setText(
                                                     skillIndex == 0 ? skills.getText() + (String) skillsArray.get(skillIndex) : skills.getText() + ", " + skillsArray.get(skillIndex)
                                             );
+                                        }
+                                        // If we posted it, don't put an apply button on
+                                        if(byUs) {
+                                            relLayout.removeView(relLayout.findViewById(R.id.project_post_apply));
+                                        }else{
+                                            relLayout.findViewById(R.id.project_post_apply).setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    ProjectPost.applyToProject(postID);
+                                                }
+                                            });
                                         }
                                     }catch(JSONException e){
                                         e.printStackTrace();
@@ -147,6 +158,13 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                                 TextView postSummary = relLayout.findViewById(R.id.user_post_summary);
                                 try {
                                     JSONObject json = (JSONObject)jsonArray.get(i);
+                                    final String postID = json.getString("id");
+                                    relLayout.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            toUserPostDetail(postID);
+                                        }
+                                    });
                                     String byUser = json.getString("username");
                                     postName.setText((byUser.equals(User.user.getUsername()) ? "you" : byUser));
                                     postSummary.setText(json.getString("summary"));
@@ -170,6 +188,18 @@ public class DiscoveryFeedActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void toProjectPostDetail(String postID){
+        Intent intent = new Intent(this, ProjectPostDetailActivity.class);
+        intent.putExtra("postID", postID);
+        startActivity(intent);
+    }
+
+    private void toUserPostDetail(String postID){
+        Intent intent = new Intent(this, UserPostDetailActivity.class);
+        intent.putExtra("postID", postID);
+        startActivity(intent);
     }
 
     public void to_post(View view){
