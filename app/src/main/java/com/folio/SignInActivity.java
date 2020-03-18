@@ -42,8 +42,8 @@ public class SignInActivity extends AppCompatActivity {
                         }catch (JSONException e){
                             e.printStackTrace();
                         }
-                        Intent intent = new Intent(getBaseContext(), MainFeedActivity.class);
                         User.user = new User(((TextView)findViewById(R.id.signin_username_input)).getText().toString());
+                        Intent intent = new Intent(getBaseContext(), NavigationActivity.class);
                         startActivity(intent);
                         return null;
                     }
