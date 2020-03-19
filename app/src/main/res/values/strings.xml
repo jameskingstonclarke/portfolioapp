@@ -20,5 +20,5 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
-    <string name="nav_projects">Projects</string>
+    <string name="menu_projects">Projects</string>
 </resources>

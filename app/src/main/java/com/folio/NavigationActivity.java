@@ -35,6 +35,7 @@ import android.widget.TextView;
 public class NavigationActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +51,20 @@ public class NavigationActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        setupNavButtonListener();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_projects,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send,
-
-                R.id.discover_nav_button)
+                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        this.navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, this.navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, this.navController);
+
+        setupNavButtonListener();
     }
 
     @Override
@@ -84,46 +84,34 @@ public class NavigationActivity extends AppCompatActivity {
         findViewById(R.id.post_nav_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("post!");
-                changeFragment(ProjectsFragment.class);
+                changeFragment(R.id.post_nav_button, "Post");
             }
         });
         findViewById(R.id.home_nav_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("home!");
+                changeFragment(R.id.home_nav_button, "Home");
             }
         });
         findViewById(R.id.discover_nav_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("discover!");
+                changeFragment(R.id.discover_nav_button, "Discover");
             }
         });
         findViewById(R.id.notifications_nav_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("notifications!");
+                changeFragment(R.id.notifications_nav_button, "Notifications");
             }
         });
     }
 
-    private void changeFragment(Class fragmentClass){
-        Fragment fragment = null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, fragment).commit();
-        // Highlight the selected item has been done by NavigationView
-        //menuItem.setChecked(true);
-        // Set action bar title
-        //setTitle(menuItem.getTitle());
-        setTitle("um....");
-        // Close the navigation drawer
-        //mDrawer.closeDrawers();
+    private void changeFragment(int fragmentClass, String title){
+        navController.popBackStack(fragmentClass, true);
+        navController.navigate(fragmentClass);
+//        navController.popBackStack();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(title);
     }
 }
